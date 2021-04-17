@@ -49,7 +49,7 @@ class WeatherController extends Controller
         return $result;
     }
 
-    public function getWeatherByCityId($value)
+    public function getWeatherByCityId($id)
     {
         $weather_data = DB::table('weather_actual')
             ->select(
@@ -59,7 +59,7 @@ class WeatherController extends Controller
                 'date_time',
                 'cities.name')
             ->leftJoin('cities', 'cities.id', '=', 'weather_actual.city_id')
-            ->whereIn('city_id', explode(',', $value))
+            ->whereIn('city_id', explode(',', $id))
             ->get();
 
         $result = [];
