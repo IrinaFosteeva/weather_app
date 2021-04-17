@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+
 
 class WeatherController extends Controller
 {
@@ -67,18 +69,18 @@ class WeatherController extends Controller
         return $result;
     }
 
-    public function createCity($value)
+    public function createCity(Request $cities)
     {
         $client = new Client([
             'base_uri' => 'http://api.openweathermap.org/data/2.5/'
         ]);
 
         $cities_data = [];
-        $value_array = explode(',', $value);
+        $cities_array = explode(',', $cities->name);
 
         DB::beginTransaction();
 
-        foreach ($value_array as $city_name) {
+        foreach ($cities_array as $city_name) {
             if ((int)$city_name !== 0) {
                 return json_encode(['error' => 'Enter string city name!']);
             }
@@ -91,7 +93,6 @@ class WeatherController extends Controller
 
             $result = $response->getBody()->getContents();
             $weather_array = json_decode($result, true);
-
             $city_data = [
                 'id' => $weather_array['city']['id'],
                 'name' => $weather_array['city']['name']
@@ -108,7 +109,7 @@ class WeatherController extends Controller
                         'weather_info' => json_encode($weather_row),
                         'city_id' => $weather_array['city']['id'],
                         'update_at' => time(),
-                        'date_time' => $weather_row['dt']
+                        'date_time' => $weather_row['dt'] - $weather_array['city']['timezone']
                     ]);
             }
         }
@@ -117,12 +118,12 @@ class WeatherController extends Controller
         return json_encode(['inserted_cities' => $cities_data]);
     }
 
-    public function deleteCity($value)
+    public function deleteCity(Request $cities)
     {
-        $deleted_cities_ids = explode(',', $value);
-            DB::table('cities')
-                ->whereIn('id', $deleted_cities_ids)
-                ->delete();
+        $deleted_cities_ids = explode(',', $cities->id);
+        DB::table('cities')
+            ->whereIn('id', $deleted_cities_ids)
+            ->delete();
 
         return json_encode(['deleted_cities' => $deleted_cities_ids]);
     }

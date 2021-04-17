@@ -41,7 +41,7 @@ class updateWeather extends Command
     {
         DB::beginTransaction();
         $old_data = DB::table('weather_actual')
-            ->where('date_time', '<', time())
+            ->where('date_time', '<=', time())
             ->get();
 
         $ids_to_delete = [];
@@ -93,7 +93,7 @@ class updateWeather extends Command
         }
 
         DB::commit();
-        return json_encode([
+        echo json_encode([
             'action' => 'update weather data',
             'success' => true
         ]);
