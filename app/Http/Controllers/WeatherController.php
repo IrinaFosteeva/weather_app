@@ -108,7 +108,6 @@ class WeatherController extends Controller
                         'id' => $weather_row['dt'] . '_' . $weather_array['city']['id'],
                         'weather_info' => json_encode($weather_row),
                         'city_id' => $weather_array['city']['id'],
-                        'update_at' => time(),
                         'date_time' => $weather_row['dt'] - $weather_array['city']['timezone']
                     ]);
             }

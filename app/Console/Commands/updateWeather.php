@@ -52,7 +52,6 @@ class updateWeather extends Command
                     'id' => $row->id,
                     'city_id' => $row->city_id,
                     'weather_info' => $row->weather_info,
-                    'update_at' => $row->update_at,
                     'date_time' => $row->date_time
                 ]);
         }
@@ -86,8 +85,7 @@ class updateWeather extends Command
                 DB::table('weather_actual')
                     ->where('id', $weather_row['dt'] . '_' . $weather_array['city']['id'])
                     ->update([
-                        'weather_info' => json_encode($weather_row),
-                        'update_at' => time()
+                        'weather_info' => json_encode($weather_row)
                     ]);
             }
         }
