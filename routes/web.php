@@ -17,7 +17,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/weather_with_dates/{city_id}/from/{from}/to/{to}', 'App\Http\Controllers\WeatherController@getWeatherDatesByCityId');
-Route::get('/weather/{city_id}', 'App\Http\Controllers\WeatherController@getWeatherByCityId');
-Route::post('/city', 'App\Http\Controllers\WeatherController@createCity');
-Route::delete('/city', 'App\Http\Controllers\WeatherController@deleteCity');
